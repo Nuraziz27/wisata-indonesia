@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lokasi Wisata - WISATA YUK!</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        :root {
+            --bpn-blue: #0047ab;
+            --bpn-yellow: #ffd700;
+        }
+        .bpn-header {
+            background-color: var(--bpn-blue);
+            color: white;
+            padding: 15px 0;
+            border-bottom: 4px solid var(--bpn-yellow);
+        }
+        .bpn-logo {
+            height: 60px;
+        }
+        .bpn-nav {
+            background-color: #f8f9fa;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .bpn-nav-link {
+            color: var(--bpn-blue) !important;
+            font-weight: 500;
+            padding: 15px 20px !important;
+        }
+        .bpn-footer {
+            background-color: var(--bpn-blue);
+            color: white;
+            padding: 40px 0;
+        }
+        .login-btn {
+            background-color: var(--bpn-yellow);
+            color: var(--bpn-blue);
+            font-weight: bold;
+        }
+        .dropdown-menu {
+            border: none;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .dropdown-item {
+            color: var(--bpn-blue);
+            padding: 10px 20px;
+        }
+        .dropdown-item:hover {
+            background-color: rgba(0,71,171,0.1);
+        }
+        
+        /* Leaflet Map Styles */
+        #wisataMap {
+            height: 600px;
+            width: 100%;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .map-container {
+            padding: 30px;
+            background-color: white;
+            border-radius: 10px;
+            margin: 30px 0;
+        }
+        .map-title {
+            color: var(--bpn-blue);
+            margin-bottom: 20px;
+        }
+        .wisata-info {
+            margin-top: 20px;
+        }
+        .page-hero {
+            background-color: var(--bpn-blue);
+            color: white;
+            padding: 50px 0;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="bpn-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <div class="d-flex align-items-center">
+                        <img src="https://www.atrbpn.go.id/Resource/Image/logo-bpn.png" alt="Logo WISATA YUK!" class="bpn-logo me-3">
+                        <div>
+                            <h1 class="mb-0">WISATA YUK!</h1>
+                            <p class="mb-0">Informasi Pariwisata</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 text-end">
+                    <a href="#" class="btn btn-sm login-btn me-2"><i class="fas fa-user me-1"></i> Login</a>
+                    <a href="#" class="btn btn-sm btn-outline-light"><i class="fas fa-question-circle me-1"></i> Bantuan</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg bpn-nav">
+        <div class="container">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link bpn-nav-link" href="index.html"><i class="fas fa-home me-1"></i> Beranda</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link bpn-nav-link dropdown-toggle active" href="#" id="destinasiDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-map-marked-alt me-1"></i> Destinasi
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="destinasiDropdown">
+                            <li><a class="dropdown-item active" href="lokasi-wisata.html"><i class="fas fa-location-dot me-2"></i> Lokasi Wisata</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-camera me-2"></i> Dokumentasi</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link bpn-nav-link" href="#"><i class="fas fa-file-alt me-1"></i> Akomodasi</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link bpn-nav-link" href="#"><i class="fas fa-book me-1"></i> Kuliner</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link bpn-nav-link" href="#"><i class="fas fa-book me-1"></i> Event</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link bpn-nav-link" href="#"><i class="fas fa-book me-1"></i> Artikel</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link bpn-nav-link" href="#"><i class="fas fa-info-circle me-1"></i> Informasi</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Hero -->
+    <section class="page-hero">
+        <div class="container text-center">
+            <h2 class="display-4 fw-bold mb-3">LOKASI WISATA</h2>
+            <p class="lead">Temukan berbagai destinasi wisata menarik di seluruh Indonesia</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="map-container">
+            <div id="wisataMap"></div>
+            <div class="wisata-info">
+                <h4 class="map-title">Lokasi Wisata Populer</h4>
+                <p>Berikut adalah peta lokasi wisata yang dapat Anda kunjungi. Klik pada marker untuk melihat detail lokasi.</p>
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i> Gunakan tombol zoom untuk memperbesar/memperkecil peta
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-5">
+            <div class="col-md-6">
+                <div class="card bpn-card">
+                    <div class="card-body">
+                        <h5><i class="fas fa-info-circle me-2 text-primary"></i> Informasi Wisata</h5>
+                        <p>Temukan berbagai destinasi wisata menarik di seluruh Indonesia. Peta ini menampilkan lokasi-lokasi wisata populer yang bisa Anda kunjungi.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card bpn-card">
+                    <div class="card-body">
+                        <h5><i class="fas fa-map-marked-alt me-2 text-primary"></i> Panduan Peta</h5>
+                        <ul>
+                            <li>Klik pada marker untuk melihat detail lokasi</li>
+                            <li>Gunakan tombol +/- untuk zoom in dan zoom out</li>
+                            <li>Drag peta untuk melihat area lain</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bpn-footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>KONTAK KAMI</h5>
+                    <p><i class="fas fa-map-marker-alt me-2"></i> Jl. Banjarsari, Tembalang, Kota Semarang</p>
+                    <p><i class="fas fa-phone me-2"></i> 08998639593</p>
+                    <p><i class="fas fa-envelope me-2"></i> info@wisatayuk.go.id</p>
+                </div>
+                <div class="col-md-4">
+                    <h5>TAUTAN CEPAT</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white">Kebijakan Privasi</a></li>
+                        <li><a href="#" class="text-white">Syarat dan Ketentuan</a></li>
+                        <li><a href="#" class="text-white">FAQ</a></li>
+                        <li><a href="#" class="text-white">Peta Situs</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>TERHUBUNG</h5>
+                    <a href="#" class="text-white me-2"><i class="fab fa-facebook-f fa-lg"></i></a>
+                    <a href="#" class="text-white me-2"><i class="fab fa-twitter fa-lg"></i></a>
+                    <a href="#" class="text-white me-2"><i class="fab fa-instagram fa-lg"></i></a>
+                    <a href="#" class="text-white me-2"><i class="fab fa-youtube fa-lg"></i></a>
+                    <div class="mt-3">
+                        <img src="https://www.atrbpn.go.id/Resource/Image/logo-kemenpan.png" alt="Kemenpan RB" style="height: 50px;" class="me-2">
+                        <img src="https://www.atrbpn.go.id/Resource/Image/logo-gov.png" alt="Gov Indonesia" style="height: 50px;">
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4 bg-light">
+            <div class="text-center">
+                <p class="mb-0">© 2024 Kementerian Pariwisata - Republik Indonesia. Semua Hak Dilindungi.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // Initialize the map
+        document.addEventListener('DOMContentLoaded', function() {
+            // Coordinates for Indonesia (centered on Java)
+            const indonesiaCenter = [-7.2906, 112.7252];
+            
+            // Create the map
+            const map = L.map('wisataMap').setView(indonesiaCenter, 6);
+            
+            // Add OpenStreetMap tiles
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+            
+            // Add some sample markers for tourist locations in Indonesia
+            const wisataLocations = [
+                {
+                    name: "Candi Borobudur",
+                    location: [-7.607874, 110.203751],
+                    description: "Candi Buddha terbesar di dunia, terletak di Magelang, Jawa Tengah."
+                },
+                {
+                    name: "Pantai Kuta",
+                    location: [-8.7227, 115.1725],
+                    description: "Pantai populer di Bali dengan pemandangan matahari terbenam yang indah."
+                },
+                {
+                    name: "Danau Toba",
+                    location: [2.6846, 98.8760],
+                    description: "Danau vulkanik terbesar di dunia, terletak di Sumatera Utara."
+                },
+                {
+                    name: "Taman Nasional Komodo",
+                    location: [-8.5574, 119.4816],
+                    description: "Rumah bagi komodo, kadal terbesar di dunia, di Nusa Tenggara Timur."
+                },
+                {
+                    name: "Monumen Nasional",
+                    location: [-6.1754, 106.8272],
+                    description: "Monumen ikonik di Jakarta yang menjadi simbol kemerdekaan Indonesia."
+                },
+                {
+                    name: "Gunung Bromo",
+                    location: [-7.9425, 112.9530],
+                    description: "Gunung berapi aktif dengan pemandangan sunrise yang spektakuler."
+                },
+                {
+                    name: "Pulau Derawan",
+                    location: [2.2557, 118.2405],
+                    description: "Surga penyelaman dengan terumbu karang dan penyu laut."
+                },
+                {
+                    name: "Raja Ampat",
+                    location: [-0.5000, 130.0000],
+                    description: "Kepulauan dengan keanekaragaman hayati laut tertinggi di dunia."
+                }
+            ];
+            
+            // Custom icon
+            const wisataIcon = L.icon({
+                iconUrl: 'https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678111-map-marker-512.png',
+                iconSize: [32, 32],
+                iconAnchor: [16, 32],
+                popupAnchor: [0, -32]
+            });
+            
+            // Add markers to the map
+            wisataLocations.forEach(loc => {
+                const marker = L.marker(loc.location, {icon: wisataIcon}).addTo(map)
+                    .bindPopup(`<b>${loc.name}</b><br>${loc.description}`);
+            });
+            
+            // Fit the map to the bounds of all markers
+            if (wisataLocations.length > 0) {
+                const group = new L.featureGroup(wisataLocations.map(loc => L.marker(loc.location)));
+                map.fitBounds(group.getBounds().pad(0.5));
+            }
+        });
+    </script>
+</body>
+</html>
